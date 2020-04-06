@@ -107,7 +107,30 @@
                 <!-- <img src="img/macbook-pro.png" alt=""> -->
                 <a class="link animated fadeInUp delay-1s servicelink" style="width: 50%;" href="#service">Let's
                     Start</a>
+
+                <br>
+               
+
             </figure>
+           
+
+
+            <div class="col-lg-9 col-sm-8 wow text-center delay-02s">
+                 <h2>UPLOAD AUDIO</h2>
+                <div class="form">
+
+                   <form action="." method="POST" role="form" class="contactForm" enctype="multipart/form-data"> {%csrf_token%}
+              
+                        {{form.as_p}}
+                        <div class="text-center">
+                            
+                            <button type="submit" value="Save" class="input-btn">UPLOAD AUDIO</button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+
 
         </div>
     </div>

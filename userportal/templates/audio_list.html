@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+<h2>
+  AUDIOS
+</h2>
+
+<table class="table">
+  
+  <thead>
+    <tr>
+      <th>
+        Title
+      </th>
+      <th>
+        content
+      </th>
+      <th>
+        Download
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in audios %}
+    <tr>
+      <td>
+        {{i.title}}
+      </td>
+      
+      <td>
+        <a href="{{i.audio.url}}" target="_blank">
+           Download
+        </a>
+        {{i.audio.url}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</body>
+</html>
+ 
+
+  <!--cab use for loop.counter-->
+
+  <!--cab use for loop.counter | add:22,etc-->
+  <!--can use conditional statements-->
+
+  
+  
+

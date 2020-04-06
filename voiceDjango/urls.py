@@ -15,9 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from userportal import views
+from userportal.views import indexPage,audio_list
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+    path('audio_list/', audio_list),
     path('admin/', admin.site.urls),
-    path('', views.indexPage),
+    path('', indexPage),
+    
 ]
+
+if settings.DEBUG:
+    urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
