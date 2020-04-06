@@ -1,6 +1,6 @@
 
-# Created by https://www.gitignore.io/api/django,pycharm,pycharm+all
-# Edit at https://www.gitignore.io/?templates=django,pycharm,pycharm+all
+# Created by https://www.gitignore.io/api/django,python,pycharm,virtualenv,pycharm+all
+# Edit at https://www.gitignore.io/?templates=django,python,pycharm,virtualenv,pycharm+all
 
 ### Django ###
 *.log
@@ -265,4 +265,64 @@ modules.xml
 # Sonarlint plugin
 .idea/sonarlint
 
-# End of https://www.gitignore.io/api/django,pycharm,pycharm+all
+### Python ###
+# Byte-compiled / optimized / DLL files
+
+# C extensions
+
+# Distribution / packaging
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+
+# Installer logs
+
+# Unit test / coverage reports
+
+# Translations
+
+# Scrapy stuff:
+
+# Sphinx documentation
+
+# PyBuilder
+
+# pyenv
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+
+# celery beat schedule file
+
+# SageMath parsed files
+
+# Spyder project settings
+
+# Rope project settings
+
+# Mr Developer
+
+# mkdocs documentation
+
+# mypy
+
+# Pyre type checker
+
+### VirtualEnv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+pyvenv.cfg
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-selfcheck.json
+
+# End of https://www.gitignore.io/api/django,python,pycharm,virtualenv,pycharm+all
