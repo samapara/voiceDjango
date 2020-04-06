@@ -47,7 +47,8 @@
         <figure class="logo animated fadeInDown delay-07s">
             <a href="#"><img src="{% static 'img/logo1.png' %}" alt=""></a>
         </figure>
-        <h1 class="animated fadeInDown delay-07s">Welcome To Voice Generator</h1>
+        <span> <a href="{% url 'logout' %}"> Logout</a> </span>
+        <h1 class="animated fadeInDown delay-07s">Welcome To Voice Generator , {{ request.user }}</h1>
         <ul class="we-create animated fadeInUp delay-1s">
             <li>We are a digital platform to generate realistic voices.</li>
         </ul>
