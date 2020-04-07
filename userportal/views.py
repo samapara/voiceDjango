@@ -62,7 +62,6 @@ def audio_list(request):
     return render(request, 'audio_list.html', context)
 
 
-@login_required(login_url='login')
 def indexPage(request):
     if request.method == 'POST':
         form = AudioUploadForm(request.POST, request.FILES)
