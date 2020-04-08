@@ -16,26 +16,28 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from rest_framework import routers
 
-from userportal.views import indexPage, audio_list, register_view, login_view, logout_view
+from userportal import views
+from userportal.views import indexPage, audio_list, register_view, login_view, logout_view, generate_audio
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+router.register(r'audio', views.UploadAudioViewSet)
 
-router.register(r'groups', views.GroupViewSet)
-from userportal import views
 urlpatterns = [
     path('audio_list/', audio_list),
     path('admin/', admin.site.urls),
     path('login/', login_view, name="login"),
     path('logout/', logout_view, name="logout"),
     path('register/', register_view, name="register"),
+    path('generate_audio/', generate_audio, name="generate_audio"),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', indexPage, name="home"),
 
-    path(r'api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls)),
+    # path(r'api-auth/', include('rest_framework.urls')),
+    # path('api/', include(router.urls)),
 ]
 
 if settings.DEBUG:

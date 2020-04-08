@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import AudioUploadModel
+from .models import AudioUploadModel, GenerateAudioRequestModel
 
 
 class AudioUploadForm(forms.ModelForm):
@@ -22,4 +22,13 @@ class CreateUserForm(UserCreationForm):
             'email',
             'password1',
             'password2'
+        ]
+
+
+class GenerateVoiceForm(forms.ModelForm):
+    class Meta:
+        model = GenerateAudioRequestModel
+        fields = [
+            'text',
+            'audioName'
         ]

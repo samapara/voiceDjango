@@ -11,3 +11,11 @@ class AudioUploadModel(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class GenerateAudioRequestModel(models.Model):
+    audioName = models.CharField(max_length=30, blank=False, null=False)
+    text = models.CharField(max_length=400, blank=False, null=False)
+
+    def __str__(self):
+        return self.audioName + " " + self.text

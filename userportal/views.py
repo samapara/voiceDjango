@@ -1,19 +1,20 @@
-from django.contrib.auth.models import User, Group
-from django.shortcuts import render, redirect
-from rest_framework import viewsets, permissions
+import os
 
-from .forms import AudioUploadForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from rest_framework import viewsets, permissions
 
 from .forms import AudioUploadForm, CreateUserForm
 from .models import AudioUploadModel
-
+from userportal.voice_backend.main import BackendHandler
 
 # Create your views here.
-from .serializers import UserSerializer, GroupSerializer
+from .serializers import UploadAudioSerializer
+
+
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -61,22 +62,47 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def audio_list(request):
-    audio_list = AudioUploadModel.objects.all()
+    my_audio_list = AudioUploadModel.objects.all()
+    form = AudioUploadForm()
     context = {
-        'audios': audio_list
+        'audios': my_audio_list,
+        'audioUploadForm': form
     }
     return render(request, 'audio_list.html', context)
 
+def generate_audio(request):
+    base_path = os.getcwd()
+    if request.method == "POST":
+
+        requestData = request.POST.dict()
+
+        text = requestData["text"]
+        audioName = requestData["audioName"]
+        backendHandler = BackendHandler()
+        audioPath = base_path + audioName
+        print("Audio Path:", audioPath)
+
+        backendHandler.test_models()
+
+        processed_wav = backendHandler.process_audio_file(audioPath)
+
+        voice_embedding = backendHandler.get_embedding(processed_wav)
+
+        spectogram = backendHandler.synthesize(text, voice_embedding)
+
+        generated_wav = backendHandler.generate_wav(spectogram)
+
+        backendHandler.save_to_disk(generated_wav, base_path+"/media/audios/generated/test.wav")
+
+        return HttpResponse(201)
+    return HttpResponse(400)
+
+
+class UploadAudioViewSet(viewsets.ModelViewSet):
+    queryset = AudioUploadModel.objects.all()
+    # permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UploadAudioSerializer
 
 def indexPage(request):
-    if request.method == 'POST':
-        form = AudioUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/audio_list')
-    else:
-        form = AudioUploadForm()
-    context = {
-        'form': form
-    }
-    return render(request, 'index.html', context)
+
+    return render(request, 'index.html')

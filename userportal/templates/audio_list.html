@@ -1,52 +1,281 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <body>
-<h2>
-  AUDIOS
-</h2>
+<h2>AUDIOS</h2>
 
-<table class="table">
-  
-  <thead>
-    <tr>
-      <th>
-        Title
-      </th>
-      <th>
-        content
-      </th>
-      <th>
-        Download
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for i in audios %}
-    <tr>
-      <td>
-        {{i.title}}
-      </td>
-      
-      <td>
-        <a href="{{i.audio.url}}" target="_blank">
-           Download
-        </a>
-        {{i.audio.url}}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+
+
 </body>
 </html>
- 
 
-  <!--cab use for loop.counter-->
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!--cab use for loop.counter | add:22,etc-->
-  <!--can use conditional statements-->
+    <title>Log In | Voice Generator</title>
 
-  
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600'
+          rel='stylesheet' type='text/css'>
+
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/magnific-popup.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="{% static 'js/jquery.1.8.3.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-scrolltofixed.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.isotope.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/wow.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/classie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/magnific-popup.js' %}"></script>
+
+</head>
+
+<body class="text-center">
+<header class="header" id="header">
+    <!--header-start-->
+
+</header>
+
+<div class="container">
+    <figure class="logo animated fadeInDown delay-07s">
+        <a href="#"><img src="{% static 'img/logo1.png' %}" alt=""></a>
+    </figure>
+    <div class="we-create animated fadeInUp delay-1s">
+        <h2>Step 1: Select Reference Audio</h2>
+        <div class="row" style="background-color: #ffffff">
+            <div class="col-md-8">
+                <table class="table">
+
+                    <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Play</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in audios %}
+                        <tr>
+                            <td><input type="radio" name="audioName" value="{{ i.audio.url }}"></td>
+                            <td>{{ i.title }}</td>
+                            <td>
+                                {{ i.audio.url }}
+                            </td>
+                            <td>
+                                <a href="{{ i.audio.url }}" target="_blank">
+                                    Play
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="col-md-4">
+                <h3>Import new audio</h3>
+                <div class="form">
+
+                    <form action="" method="POST" id="uploadAudioForm" role="form" class="contactForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ audioUploadForm.as_p }}
+                        <div class="text-center">
+                            <button type="submit" value="Save" class="input-btn">Upload Audio</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <h2>Step 2: Enter Text To render</h2>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="form">
+                    <textarea name="name" id="textToGenerate" cols="80" rows="10"></textarea>
+                    <div class="text-center mt-5">
+                        <button type="button" value="Save" id="doGenerateAudio" class="input-btn">Generate AUDIO</button>
+                    </div>
+                    <div class="text-center mt-5">
+                        <a class="btn btn-warning" value="Save" id="downloadAudio" href="/media/audios/generated/test.wav" class="input-btn" disabled="true">Download Audio</a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#uploadAudioForm").submit(
+            function (e) {
+                e.preventDefault();
+                let form = $(this)[0];
+                let data = new FormData(form);
+                {#data.append("CustomField", "This is some extra data, testing");#}
+                $.ajax({
+                    type: "POST",
+                    enctype: "multipart/form-data",
+                    url: "/api/audio/",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function(data) {
+                        console.log(data);
+                        location.reload();
+                    },
+                    error: function (e) {
+                        console.error("ERROR ", e);
+                    }
+                })
+            }
+        )
+    })
+
+    $("#doGenerateAudio").click(function(){
+        let csrfToken = $('{% csrf_token %}').val();
+        let audioPath = $('input[name="audioName"]:checked').val();
+        let text = $('#textToGenerate').val();
+        console.log(csrfToken, audioPath, text);
+
+
+        {#let data = new FormData();#}
+        {#data.append("CustomField", "This is some extra data, testing");#}
+        {#data.append('text', text);#}
+        {#data.append('audioName', audioPath);#}
+        {#data.append('csrfmiddlewaretoken', csrfToken);#}
+        $.ajax({
+            type: "POST",
+            url: "/generate_audio/",
+            data: {
+                text: text,
+                audioName: audioPath,
+                csrfmiddlewaretoken:  csrfToken
+            },
+            success: function(data) {
+                console.log(data);
+                $("#downloadAudio").disable(false);
+            },
+            error: function (e) {
+                console.error("ERROR ", e);
+            }
+        })
+    })
+</script>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+        $('#test').scrollToFixed();
+        $('.res-nav_click').click(function () {
+            $('.main-nav').slideToggle();
+            return false
+
+        });
+
+        $('.Portfolio-box').magnificPopup({
+            delegate: 'a',
+            type: 'image'
+        });
+
+    });
+</script>
+
+<script>
+    wow = new WOW({
+        animateClass: 'animated',
+        offset: 100
+    });
+    wow.init();
+</script>
+
+
+<script type="text/javascript">
+    $(window).load(function () {
+
+        $('.main-nav li a, .servicelink').bind('click', function (event) {
+            var $anchor = $(this);
+
+            $('html, body').stop().animate({
+                scrollTop: $($anchor.attr('href')).offset().top
+            }, 1500, 'easeInOutExpo');
+            /*
+            if you don't want to use the easing effects:
+            $('html, body').stop().animate({
+                scrollTop: $($anchor.attr('href')).offset().top
+            }, 1000);
+            */
+            if ($(window).width() < 768) {
+                $('.main-nav').hide();
+            }
+            event.preventDefault();
+        });
+    })
+</script>
+
+<script type="text/javascript">
+    $(window).load(function () {
+
+
+        var $container = $('.portfolioContainer'),
+            $body = $('body'),
+            colW = 375,
+            columns = null;
+
+
+        $container.isotope({
+            // disable window resizing
+            resizable: true,
+            masonry: {
+                columnWidth: colW
+            }
+        });
+
+        $(window).smartresize(function () {
+            // check if columns has changed
+            var currentColumns = Math.floor(($body.width() - 30) / colW);
+            if (currentColumns !== columns) {
+                // set new column count
+                columns = currentColumns;
+                // apply width to container manually, then trigger relayout
+                $container.width(columns * colW)
+                    .isotope('reLayout');
+            }
+
+        }).smartresize(); // trigger resize to set container width
+        $('.portfolioFilter a').click(function () {
+            $('.portfolioFilter .current').removeClass('current');
+            $(this).addClass('current');
+
+            var selector = $(this).attr('data-filter');
+            $container.isotope({
+
+                filter: selector,
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>
+
+
   
 

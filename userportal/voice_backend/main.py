@@ -1,14 +1,15 @@
-import sys
-from pathlib import Path
-import librosa
-import numpy as np
-import torch
-from userportal.voice_backend.vocoder import inference as vocoder
-from userportal.voice_backend.encoder import inference as encoder
-from userportal.voice_backend.synthesizer.inference import Synthesizer
+import os
+
 from userportal.voice_backend.encoder.params_model import model_embedding_size as speaker_embedding_size
 
-import os
+from userportal.voice_backend.synthesizer.inference import Synthesizer
+from userportal.voice_backend.encoder import inference as encoder
+from userportal.voice_backend.vocoder import inference as vocoder
+from pathlib import Path
+import numpy as np
+import librosa
+import torch
+import sys
 
 base_path = os.path.join(os.getcwd(), "userportal/voice_backend")
 
@@ -21,7 +22,13 @@ print(enc_model_path, syn_model_dir, voc_model_fpath)
 
 
 class BackendHandler:
-    synthesizer = Synthesizer(Path(syn_model_dir + "taco_pretrained"), low_mem=low_mem)
+
+    def __init__(self):
+        self.synthesizer = Synthesizer(Path(syn_model_dir + "taco_pretrained"), low_mem=low_mem)
+        encoder.load_model(Path(enc_model_path))
+        vocoder.load_model(voc_model_fpath)
+
+
     def test_models(self):
         print("Running a test of your configuration...\n")
         if not torch.cuda.is_available():
@@ -31,9 +38,8 @@ class BackendHandler:
                   "not supported.", file=sys.stderr)
 
         print("Preparing the encoder, the synthesizer and the vocoder...")
-        encoder.load_model(Path(enc_model_path))
+        # encoder.load_model(Path(enc_model_path))
         # synthesizer = Synthesizer(Path(syn_model_dir + "taco_pretrained"), low_mem=low_mem)
-        vocoder.load_model(voc_model_fpath)
 
         print("\tTesting the encoder...")
         encoder.embed_utterance(np.zeros(encoder.sampling_rate))
@@ -69,7 +75,6 @@ class BackendHandler:
 
         print("All test passed! You can now synthesize speech.\n\n")
 
-
     def process_audio_file(self, path):
         in_fpath = Path(path)
 
@@ -97,7 +102,7 @@ class BackendHandler:
     def generate_wav(self, spec):
         generated_wav = vocoder.infer_waveform(spec)
         generated_wav = np.pad(generated_wav,(0, self.synthesizer.sample_rate), mode="constant" )
-        return  generated_wav
+        return generated_wav
 
 
     def save_to_disk(self, generated_wav, file_name):
