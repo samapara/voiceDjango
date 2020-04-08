@@ -17,9 +17,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
 
 from userportal.views import indexPage, audio_list, register_view, login_view, logout_view
 
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+
+router.register(r'groups', views.GroupViewSet)
+from userportal import views
 urlpatterns = [
     path('audio_list/', audio_list),
     path('admin/', admin.site.urls),
@@ -28,6 +34,8 @@ urlpatterns = [
     path('register/', register_view, name="register"),
     path('', indexPage, name="home"),
 
+    path(r'api-auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
 ]
 
 if settings.DEBUG:

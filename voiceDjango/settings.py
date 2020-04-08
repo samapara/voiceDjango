@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'userportal.apps.UserportalConfig',
+    'rest_framework',    
 ]
 
 MIDDLEWARE = [

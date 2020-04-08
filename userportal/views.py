@@ -1,3 +1,8 @@
+from django.contrib.auth.models import User, Group
+from django.shortcuts import render, redirect
+from rest_framework import viewsets, permissions
+
+from .forms import AudioUploadForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,6 +13,7 @@ from .models import AudioUploadModel
 
 
 # Create your views here.
+from .serializers import UserSerializer, GroupSerializer
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('home')
