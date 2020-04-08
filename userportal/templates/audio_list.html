@@ -126,7 +126,7 @@
                 e.preventDefault();
                 let form = $(this)[0];
                 let data = new FormData(form);
-                {#data.append("CustomField", "This is some extra data, testing");#}
+                data.append("username_ofaudiouploaded", "{{ request.user }}");
                 $.ajax({
                     type: "POST",
                     enctype: "multipart/form-data",

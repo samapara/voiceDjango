@@ -19,4 +19,4 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class UploadAudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioUploadModel
-        fields = ['title', 'audio']
+        fields = ['title', 'audio', 'username_ofaudiouploaded']
