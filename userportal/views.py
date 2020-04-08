@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets, permissions
+from django.contrib.auth.models import User
 
 from .forms import AudioUploadForm, CreateUserForm
 from .models import AudioUploadModel
@@ -62,7 +63,9 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def audio_list(request):
-    my_audio_list = AudioUploadModel.objects.all()
+    #    audio_list = AudioUploadModel.objects.all()
+    my_audio_list = AudioUploadModel.objects.all().filter(username_ofaudiouploaded=request.user)
+    # audio_list = my_model.objects.all()
     form = AudioUploadForm()
     context = {
         'audios': my_audio_list,
