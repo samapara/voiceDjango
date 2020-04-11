@@ -20,3 +20,13 @@ class GenerateAudioRequestModel(models.Model):
 
     def __str__(self):
         return self.audioName + " " + self.text
+
+
+class GeneratedAudioModel(models.Model):
+    audioName = models.CharField(max_length=30, blank=False, null=False)
+    text = models.CharField(max_length=400, blank=False, null=False)
+    username_ofaudiouploaded = models.CharField(max_length=200, blank=True, null=True)
+    audio = models.FileField(upload_to='audios/generatedaudios/', validators=[validate_file_extension])
+
+    def __str__(self):
+        return self.audioName + " " + self.text

@@ -20,7 +20,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from userportal import views
-from userportal.views import indexPage, audio_list, register_view, login_view, logout_view, generate_audio
+from userportal.views import indexPage, audio_list, register_view, login_view, logout_view, generate_audio,generated_list
 
 router = routers.DefaultRouter()
 router.register(r'audio', views.UploadAudioViewSet)
@@ -32,6 +32,7 @@ urlpatterns = [
     path('logout/', logout_view, name="logout"),
     path('register/', register_view, name="register"),
     path('generate_audio/', generate_audio, name="generate_audio"),
+    path('generated_audiolist/', generated_list, name="view_audio"),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', indexPage, name="home"),

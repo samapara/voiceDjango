@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+<h2>AUDIOS</h2>
+
+
+
+</body>
+</html>
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Log In | Voice Generator</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600'
+          rel='stylesheet' type='text/css'>
+
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/magnific-popup.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
+
+  >
+
+</head>
+
+<body class="text-center">
+<header class="header" id="header">
+    <!--header-start-->
+
+</header>
+
+<div class="container">
+    <figure class="logo animated fadeInDown delay-07s">
+        <a href="#"><img src="{% static 'img/logo1.png' %}" alt=""></a>
+    </figure>
+    <div class="we-create animated fadeInUp delay-1s">
+        <h2> Generated Audios</h2>
+        <div class="row" style="background-color: #ffffff">
+            <div class="col-md-8">
+                <table class="table">
+
+                    <thead>
+                    <tr>
+                        <th>x</th>
+                        <th>audioname</th>
+                        <th>username</th>
+                        <th>url</th>
+                        <th>text</th>
+                        <th>Play</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in audios %}
+                        <tr>
+                            <td><input type="radio" name="audioName" value="{{ i.audio.url }}"></td>
+                            <td>{{ i.audioName }}</td>
+                            <td>
+                                {{ i.username_ofaudiouploaded }}
+                            </td>
+                            <td>
+                                {{ i.audio.url }}
+                            </td>
+                            <td>
+                                {{ i.text }}
+                            </td>
+                            <td>
+                                <a href="{{ i.audio.url }}" target="_blank">
+                                    Play
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+

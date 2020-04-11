@@ -5,11 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.files import File
 from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
 
 from .forms import AudioUploadForm, CreateUserForm
-from .models import AudioUploadModel
+from .models import AudioUploadModel, GeneratedAudioModel
 from userportal.voice_backend.main import BackendHandler
 
 # Create your views here.
@@ -73,6 +74,18 @@ def audio_list(request):
     }
     return render(request, 'audio_list.html', context)
 
+
+@login_required(login_url='login')
+def generated_list(request):
+
+    my_audio_list = GeneratedAudioModel.objects.all().filter(username_ofaudiouploaded=request.user)
+
+    context = {
+        'audios': my_audio_list,
+    }
+    return render(request, 'generated_audiolist.html', context)
+
+
 def generate_audio(request):
     base_path = os.getcwd()
     if request.method == "POST":
@@ -95,9 +108,22 @@ def generate_audio(request):
 
         generated_wav = backendHandler.generate_wav(spectogram)
 
-        backendHandler.save_to_disk(generated_wav, base_path+"/media/audios/generated/test.wav")
+        backendHandler.save_to_disk(generated_wav, base_path + "/media/audios/generated/test.wav")
+
+        my_model = GeneratedAudioModel()
+
+        reopen = open('media/audios/generated/test.wav', 'rb')
+        django_file = File(reopen)
+
+        my_model.audio=django_file
+        my_model.audio.name= str(request.user)+".wav"
+        my_model.audioName = audioName
+        my_model.text = text
+        my_model.username_ofaudiouploaded = request.user
+        my_model.save()
 
         return HttpResponse(201)
+
     return HttpResponse(400)
 
 
@@ -106,6 +132,6 @@ class UploadAudioViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = UploadAudioSerializer
 
-def indexPage(request):
 
+def indexPage(request):
     return render(request, 'index.html')
