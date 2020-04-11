@@ -5,13 +5,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from rest_framework import viewsets, permissions
-from django.contrib.auth.models import User
+from rest_framework import viewsets
 
+from userportal.voice_backend.main import BackendHandler
 from .forms import AudioUploadForm, CreateUserForm
 from .models import AudioUploadModel
-from userportal.voice_backend.main import BackendHandler
-
 # Create your views here.
 from .serializers import UploadAudioSerializer
 
@@ -73,10 +71,10 @@ def audio_list(request):
     }
     return render(request, 'audio_list.html', context)
 
+
 def generate_audio(request):
     base_path = os.getcwd()
     if request.method == "POST":
-
         requestData = request.POST.dict()
 
         text = requestData["text"]
@@ -95,7 +93,7 @@ def generate_audio(request):
 
         generated_wav = backendHandler.generate_wav(spectogram)
 
-        backendHandler.save_to_disk(generated_wav, base_path+"/media/audios/generated/test.wav")
+        backendHandler.save_to_disk(generated_wav, base_path + "/media/audios/generated/test.wav")
 
         return HttpResponse(201)
     return HttpResponse(400)
@@ -106,6 +104,6 @@ class UploadAudioViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = UploadAudioSerializer
 
-def indexPage(request):
 
+def indexPage(request):
     return render(request, 'index.html')

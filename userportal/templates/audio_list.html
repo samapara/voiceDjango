@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<body>
-<h2>AUDIOS</h2>
-
-
-
-</body>
-</html>
 
 {% load static %}
 <!doctype html>
@@ -40,31 +33,57 @@
 
 </head>
 
-<body class="text-center">
+<body>
+{% comment %}
 <header class="header" id="header">
     <!--header-start-->
 
 </header>
+{% endcomment %}
 
-<div class="container">
-    <figure class="logo animated fadeInDown delay-07s">
-        <a href="#"><img src="{% static 'img/logo1.png' %}" alt=""></a>
-    </figure>
-    <div class="we-create animated fadeInUp delay-1s">
-        <h2>Step 1: Select Reference Audio</h2>
-        <div class="row" style="background-color: #ffffff">
-            <div class="col-md-8">
-                <table class="table">
+<div class="container text-center">
+    {#    <div class="we-create animated fadeInUp delay-1s">#}
+    <div id="uploadaudio" class="row min-vh-100 align-content-center justify-content-center">
+    <div class="col-md-3"></div>
+        <div class="col-md-6 p-2">
+            <h2>Step 1: Select Reference Audio</h2>
+            <p>Import new audio</p>
+            <div class="form p-2 m-0">
+
+                <form action="" method="POST" id="uploadAudioForm" role="form" class="contactForm"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+{#                    {{ audioUploadForm.as_table }}#}
+
+                    <input type="text" class="form-control form-control-sm m-1" placeholder="Title" name="title">
+                    <input type="file" class="form-control-file m-1" placeholder="Audio File" name="audio">
+                    <div class="text-center">
+                        <button type="submit" value="Save" class="input-btn small">Upload Audio</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+
+        {#    </div>#}
+        {#    <div class="row" style="background-color: #ffffff">#}
+        <div class="col-md-12 m-4">
+            {% if audios.count > 0 %}
+
+                <table class="table table-bordered table-responsive-md table-striped">
 
                     <thead>
                     <tr>
-                        <th>x</th>
+                        <th>Select</th>
                         <th>Title</th>
                         <th>Content</th>
                         <th>Play</th>
                     </tr>
                     </thead>
+
                     <tbody>
+
+
                     {% for i in audios %}
                         <tr>
                             <td><input type="radio" name="audioName" value="{{ i.audio.url }}"></td>
@@ -79,47 +98,52 @@
                             </td>
                         </tr>
                     {% endfor %}
+
                     </tbody>
                 </table>
-            </div>
+                </div>
+             </div>
 
+                <hr>
 
-            <div class="col-md-4">
-                <h3>Import new audio</h3>
-                <div class="form">
+                <div class="row min-vh-100" id="entertext" style="display: none;">
+                    <div class="col-md-12">
+                    <h2>Step 2: Enter Text To render</h2>
 
-                    <form action="" method="POST" id="uploadAudioForm" role="form" class="contactForm" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ audioUploadForm.as_p }}
-                        <div class="text-center">
-                            <button type="submit" value="Save" class="input-btn">Upload Audio</button>
+                        <div class="form">
+                            <textarea name="name" id="textToGenerate" cols="80" rows="10"></textarea>
+                            <div class="text-center mt-5">
+                                <button type="button" value="Save" id="doGenerateAudio" class="input-btn">Generate
+                                    AUDIO
+                                </button>
+                            </div>
+                            <div class="text-center mt-5">
+                                <a class="btn btn-warning" value="Save" id="downloadAudio"
+                                   href="/media/audios/generated/test.wav" disabled="true">Download
+                                    Audio</a>
+                            </div>
+
                         </div>
-                    </form>
-                </div>
 
-            </div>
-        </div>
-        <h2>Step 2: Enter Text To render</h2>
-        <div class="row">
-            <div class="col-md-12">
-
-                <div class="form">
-                    <textarea name="name" id="textToGenerate" cols="80" rows="10"></textarea>
-                    <div class="text-center mt-5">
-                        <button type="button" value="Save" id="doGenerateAudio" class="input-btn">Generate AUDIO</button>
                     </div>
-                    <div class="text-center mt-5">
-                        <a class="btn btn-warning" value="Save" id="downloadAudio" href="/media/audios/generated/test.wav" class="input-btn" disabled="true">Download Audio</a>
-                    </div>
-
                 </div>
+            {% else %}
 
-            </div>
-        </div>
-    </div>
+                <div class="text-center">
+                    <h5 class="error-text m-4"> Please upload atleast one the audio to get started.</h5>
+                </div>
+            {% endif %}
+    {#    </div>#}
 </div>
 
 <script>
+
+
+    $("input[name='audioName']").change('click', function(){
+        $('#entertext').css('display','block');
+         let scrollTop = $('#entertext').offset().top;
+            $(window).scrollTop(scrollTop);
+    });
     $(function () {
         $("#uploadAudioForm").submit(
             function (e) {
@@ -136,7 +160,7 @@
                     contentType: false,
                     cache: false,
                     timeout: 600000,
-                    success: function(data) {
+                    success: function (data) {
                         console.log(data);
                         location.reload();
                     },
@@ -148,7 +172,7 @@
         )
     })
 
-    $("#doGenerateAudio").click(function(){
+    $("#doGenerateAudio").click(function () {
         let csrfToken = $('{% csrf_token %}').val();
         let audioPath = $('input[name="audioName"]:checked').val();
         let text = $('#textToGenerate').val();
@@ -166,9 +190,9 @@
             data: {
                 text: text,
                 audioName: audioPath,
-                csrfmiddlewaretoken:  csrfToken
+                csrfmiddlewaretoken: csrfToken
             },
-            success: function(data) {
+            success: function (data) {
                 console.log(data);
                 $("#downloadAudio").disable(false);
             },
