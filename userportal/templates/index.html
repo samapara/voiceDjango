@@ -46,6 +46,8 @@
  <div class="row h-25 bg-transparent justify-content-end w-auto p-2">
         {% if user.is_authenticated %}
         <span> <a class="animated fadeInUp delay-1s m-5" href="{% url 'logout' %}"><i class="fa fa-sign-out"> Logout</i> </a> </span>
+        {% else %}
+        <span> <a class="animated fadeInUp delay-1s m-5" href="{% url 'login' %}"><i class="fa fa-sign-in"> Sign In</i> </a> </span>
         {% endif %}
         </div>
     <div class="container">
@@ -57,7 +59,7 @@
         <ul class="we-create animated fadeInUp delay-1s">
             <li>We are a digital platform to generate realistic voices.</li>
         </ul>
-        <a class="link animated fadeInUp delay-1s" href="/audio_list">Get Started</a>
+        <a class="link animated fadeInUp delay-1s" href="./audio_list">Get Started</a>
     </div>
 </header>
 <!--header-end-->

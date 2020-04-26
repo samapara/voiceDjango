@@ -89,9 +89,9 @@ def generate_audio(request):
 
         voice_embedding = backendHandler.get_embedding(processed_wav)
 
-        spectogram = backendHandler.synthesize(text, voice_embedding)
+        spectrogram = backendHandler.synthesize(text, voice_embedding)
 
-        generated_wav = backendHandler.generate_wav(spectogram)
+        generated_wav = backendHandler.generate_wav(spectrogram)
 
         backendHandler.save_to_disk(generated_wav, base_path + "/media/audios/generated/test.wav")
 
