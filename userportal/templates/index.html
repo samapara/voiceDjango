@@ -43,13 +43,16 @@
 <body>
 <header class="header" id="header">
     <!--header-start-->
+ <div class="row h-25 bg-transparent justify-content-end w-auto p-2">
+        {% if user.is_authenticated %}
+        <span> <a class="animated fadeInUp delay-1s m-5" href="{% url 'logout' %}"><i class="fa fa-sign-out"> Logout</i> </a> </span>
+        {% endif %}
+        </div>
     <div class="container">
+
         <figure class="logo animated fadeInDown delay-07s">
             <a href="#"><img src="{% static 'img/logo1.png' %}" alt=""></a>
         </figure>
-        {% if user.is_authenticated %}
-        <span> <a href="{% url 'logout' %}"> Logout</a> </span>
-        {% endif %}
         <h1 class="animated fadeInDown delay-07s">Welcome To Voice Generator , {{ request.user }}</h1>
         <ul class="we-create animated fadeInUp delay-1s">
             <li>We are a digital platform to generate realistic voices.</li>
@@ -112,10 +115,10 @@
                     Start</a>
 
                 <br>
-               
+
 
             </figure>
-           
+
 
 
 {#            <div class="col-lg-9 col-sm-8 wow text-center delay-02s">#}
