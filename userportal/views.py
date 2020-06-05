@@ -5,12 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.core.files import File
 from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
 
+from userportal.voice_backend.main import BackendHandler
 from .forms import AudioUploadForm, CreateUserForm
-from .models import AudioUploadModel, GeneratedAudioModel
+from .models import AudioUploadModel
 from userportal.voice_backend.main import BackendHandler
 
 # Create your views here.
@@ -104,9 +104,9 @@ def generate_audio(request):
 
         voice_embedding = backendHandler.get_embedding(processed_wav)
 
-        spectogram = backendHandler.synthesize(text, voice_embedding)
+        spectrogram = backendHandler.synthesize(text, voice_embedding)
 
-        generated_wav = backendHandler.generate_wav(spectogram)
+        generated_wav = backendHandler.generate_wav(spectrogram)
 
         backendHandler.save_to_disk(generated_wav, base_path + "/media/audios/generated/test.wav")
 
@@ -134,4 +134,5 @@ class UploadAudioViewSet(viewsets.ModelViewSet):
 
 
 def indexPage(request):
+
     return render(request, 'index.html')

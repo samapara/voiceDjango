@@ -1,21 +1,21 @@
 import os
-
-from userportal.voice_backend.encoder.params_model import model_embedding_size as speaker_embedding_size
-
-from userportal.voice_backend.synthesizer.inference import Synthesizer
-from userportal.voice_backend.encoder import inference as encoder
-from userportal.voice_backend.vocoder import inference as vocoder
-from pathlib import Path
-import numpy as np
-import librosa
-import torch
 import sys
+from pathlib import Path
+
+import librosa
+import numpy as np
+import torch
+
+from userportal.voice_backend.encoder import inference as encoder
+from userportal.voice_backend.encoder.params_model import model_embedding_size as speaker_embedding_size
+from userportal.voice_backend.synthesizer.inference import Synthesizer
+from userportal.voice_backend.vocoder import inference as vocoder
 
 base_path = os.path.join(os.getcwd(), "userportal/voice_backend")
 
-enc_model_path = os.path.join(base_path , "encoder/saved_models/pretrained.pt")
-syn_model_dir = os.path.join(base_path , "synthesizer/saved_models/logs-pretrained/")
-voc_model_fpath = os.path.join(base_path , "vocoder/saved_models/pretrained/pretrained.pt")
+enc_model_path = os.path.join(base_path, "encoder/saved_models/pretrained.pt")
+syn_model_dir = os.path.join(base_path, "synthesizer/saved_models/logs-pretrained/")
+voc_model_fpath = os.path.join(base_path, "vocoder/saved_models/pretrained/pretrained.pt")
 low_mem = False
 # print(Path(os.path.join(os.getcwd(), syn_model_dir ,"taco_pretrained")))
 print(enc_model_path, syn_model_dir, voc_model_fpath)
@@ -27,7 +27,6 @@ class BackendHandler:
         self.synthesizer = Synthesizer(Path(syn_model_dir + "taco_pretrained"), low_mem=low_mem)
         encoder.load_model(Path(enc_model_path))
         vocoder.load_model(voc_model_fpath)
-
 
     def test_models(self):
         print("Running a test of your configuration...\n")
@@ -86,10 +85,8 @@ class BackendHandler:
 
         return preprocessed_wav
 
-
     def get_embedding(self, wav):
         return encoder.embed_utterance(wav)
-
 
     def synthesize(self, text, embedding):
         texts = [text]
@@ -98,12 +95,10 @@ class BackendHandler:
 
         return specs[0]
 
-
     def generate_wav(self, spec):
         generated_wav = vocoder.infer_waveform(spec)
-        generated_wav = np.pad(generated_wav,(0, self.synthesizer.sample_rate), mode="constant" )
+        generated_wav = np.pad(generated_wav, (0, self.synthesizer.sample_rate), mode="constant")
         return generated_wav
-
 
     def save_to_disk(self, generated_wav, file_name):
         librosa.output.write_wav(file_name, generated_wav.astype(np.float32),

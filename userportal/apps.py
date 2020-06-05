@@ -7,4 +7,4 @@ class UserportalConfig(AppConfig):
     name = 'userportal'
 
     # def ready(self):
-        # BackendHandler().test_models()
+    # BackendHandler().test_models()
