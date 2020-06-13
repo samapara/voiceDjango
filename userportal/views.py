@@ -3,16 +3,14 @@ import os
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.files import File
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from rest_framework import viewsets, permissions
-from django.contrib.auth.models import User
+from rest_framework import viewsets
 
 from userportal.voice_backend.main import BackendHandler
 from .forms import AudioUploadForm, CreateUserForm
-from .models import AudioUploadModel
-from userportal.voice_backend.main import BackendHandler
-
+from .models import AudioUploadModel, GeneratedAudioModel
 # Create your views here.
 from .serializers import UploadAudioSerializer
 
@@ -77,8 +75,8 @@ def audio_list(request):
 
 @login_required(login_url='login')
 def generated_list(request):
-
     my_audio_list = GeneratedAudioModel.objects.all().filter(username_ofaudiouploaded=request.user)
+    username = request.user
 
     context = {
         'audios': my_audio_list,
@@ -89,7 +87,6 @@ def generated_list(request):
 def generate_audio(request):
     base_path = os.getcwd()
     if request.method == "POST":
-
         requestData = request.POST.dict()
 
         text = requestData["text"]
@@ -115,8 +112,8 @@ def generate_audio(request):
         reopen = open('media/audios/generated/test.wav', 'rb')
         django_file = File(reopen)
 
-        my_model.audio=django_file
-        my_model.audio.name= str(request.user)+".wav"
+        my_model.audio = django_file
+        my_model.audio.name = str(request.user) + ".wav"
         my_model.audioName = audioName
         my_model.text = text
         my_model.username_ofaudiouploaded = request.user
@@ -134,5 +131,4 @@ class UploadAudioViewSet(viewsets.ModelViewSet):
 
 
 def indexPage(request):
-
     return render(request, 'index.html')

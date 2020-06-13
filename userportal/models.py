@@ -14,6 +14,7 @@ class AudioUploadModel(models.Model):
         return self.title
 
 
+# Hello World. Welcome to the voice generation portal.  I hope you a great day and thanks for watching the video.
 class GenerateAudioRequestModel(models.Model):
     audioName = models.CharField(max_length=30, blank=False, null=False)
     text = models.CharField(max_length=400, blank=False, null=False)

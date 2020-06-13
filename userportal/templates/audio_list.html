@@ -131,11 +131,12 @@
                                 <button type="button" value="Save" id="doGenerateAudio" class="input-btn">Generate
                                     AUDIO
                                 </button>
-                                <div style="display: none" id="progress" class="spinner-border text-warning"></div>
-                            </div>
+                                <div style="display: none" id="progress">
+                                     <div class="spinner-border text-warning"></div>
+                                </div>
                             <div class="text-center mt-5">
                                 <a class="btn btn-warning" value="Save" id="downloadAudio"
-                                   href="/media/audios/generated/test.wav" disabled="true">Download
+                                   href="http://localhost:8000/generated_audiolist/" disabled="true">Download
                                     Audio</a>
                             </div>
 
@@ -187,7 +188,7 @@
                 })
             }
         )
-    })
+    });
 
     $("#doGenerateAudio").click(function () {
         let csrfToken = $('{% csrf_token %}').val();
@@ -205,8 +206,8 @@
                 csrfmiddlewaretoken: csrfToken
             },
             success: function (data) {
-                console.log(data);
-                $("#downloadAudio").prop('disabled',false);
+                  console.log(data);
+                  $("#downloadAudio").prop('disabled',false);
                   $("#progress").css("display","none");
                   $("#doGenerateAudio").css("display","block");
             },
